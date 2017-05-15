@@ -1,0 +1,20 @@
+{
+  "reports": [
+    {
+      "name": "Antenatal Services",
+      "code": "as"
+    },
+    {
+      "name": "Child Health Services",
+      "code": "chs"
+    },
+    {
+      "name": "Children & Adolescent Services",
+      "code": "cas"
+    },
+    {
+      "name": "Post Natal",
+      "code": "pn"
+    }
+  ]
+}
