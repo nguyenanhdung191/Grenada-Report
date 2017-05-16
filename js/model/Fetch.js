@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
-const auth = "Basic " + btoa("dung:ABCD1234");
-const api = "https://hispvn.org/grd/api";
+import config from "./config.json";
+const api = config.baseUrl + "/api";
 
 export default class Fetch {
     constructor() {
@@ -11,9 +11,6 @@ export default class Fetch {
         return fetch(
             `${api}/organisationUnits?paging=false&fields=id,name,level,children[id,name],parent[id,name]`,
             {
-                headers: {
-                    Authorization: auth
-                },
                 compress: false
             }
         )
@@ -25,9 +22,6 @@ export default class Fetch {
         return fetch(
             api,
             {
-                headers: {
-                    Authorization: auth
-                },
                 compress: false
             }
         )

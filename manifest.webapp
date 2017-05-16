@@ -1,0 +1,28 @@
+{
+	"version": "1.0",
+	"name": "Grenada Report",
+	"description": "",
+	"icons": {
+		"16": "/icon.png",
+		"48": "/icon.png",
+		"128": "/icon.png"
+	},
+	"developer": {
+		"url": "http://hisp.vn",
+		"name": "Dung Nguyen Anh",
+		"company": "HISP Viet Nam",
+		"email": "nguyenanhdung191@gmail.com"
+	},
+	"activities": {
+		"dhis": {
+			"href": "*"
+		}
+	},
+	"folderName": null,
+	"baseUrl": null,
+	"key": null,
+	"launchUrl": null,
+	"launch_path": "index.html",
+	"installs_allowed_from": null,
+	"default_locale": "en"
+}

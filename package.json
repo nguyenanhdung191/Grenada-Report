@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "webpack && zip -r grenada-report.zip icon.png css/ bundle.js js/lib/jstree/ manifest.webapp index.html"
   },
   "author": "",
   "license": "ISC",

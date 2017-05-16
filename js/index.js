@@ -4,9 +4,10 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import initHeaderBar from 'd2-ui/lib/app-header';
 import MainComponent from './components/MainComponent';
+import config from './model/config.json'
 injectTapEventPlugin();
 
-initHeaderBar(document.getElementById('header-bar'), "https://hispvn.org/grd/api")
+initHeaderBar(document.getElementById('header-bar'), config.baseUrl + "/api")
     .catch(err => {
         console.warn(err);
     });
