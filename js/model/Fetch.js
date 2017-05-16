@@ -21,4 +21,18 @@ export default class Fetch {
             .then(json => json.organisationUnits);
     }
 
+    getReportData(api) {
+        return fetch(
+            api,
+            {
+                headers: {
+                    Authorization: auth
+                },
+                compress: false
+            }
+        )
+            .then(result => result.json())
+            .then(json => json);
+    }
+
 }

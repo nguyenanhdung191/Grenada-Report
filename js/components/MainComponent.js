@@ -1,9 +1,14 @@
 import React from "react";
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
 
+import AntenatalServicesReport from "./AntenatalServicesReport";
+import AdultAndElderlyServicesReport from "./AdultAndElderlyServicesReport";
+import ChildHealthServicesReport from "./ChildHealthServicesReport";
+import ChildrenAndAdolescentServicesReport from "./ChildrenAndAdolescentServicesReport";
+import PostNatalServicesReport from "./PostNatalServicesReport";
 import config from "../model/config.json";
 
 import OrgUnitSelector from "./OrgUnitSelector";
@@ -23,20 +28,29 @@ export default class MainComponent extends React.Component {
             selectedYear: "",
             selectedMonth: "",
             selectedQuarter: "",
+            selectedMonthText: "",
+            selectedQuarterText: "",
             currentYear: thisYear,
             yearList: yearList,
             displayMonthSelector: "none",
             displayQuarterSelector: "none",
             displayYearSelector: "none",
+            reportParam: {},
 
         };
 
         this.divStyle = {
             float: "left",
             margin: 10,
-            width: "32%",
-            height: 250
+            width: "32.25%",
+            height: 200
 
+        };
+
+        this.reportContainerStyle = {
+            marginLeft: 10,
+            marginTop: 30,
+            width: "100%",
         };
 
         this.paperStyle = {
@@ -47,17 +61,21 @@ export default class MainComponent extends React.Component {
     }
 
     handleReportChange = (event, index, value) => {
-        let object = this.state;
-        object.selectedReport = value;
-        this.setState({object});
+        this.setState({
+            selectedReport: value,
+            reportParam: {}
+        })
     };
 
     handlePeriodTypeChange = (event, index, value) => {
-        let object = this.state;
+        let object = {};
         object.selectedPeriodType = value;
         object.selectedMonth = "";
         object.selectedQuarter = "";
+        object.selectedQuarterText = "";
+        object.selectedMonthText = "";
         object.selectedYear = "";
+        object.reportParam = {};
         if (value === "monthly") {
             object.displayQuarterSelector = "none";
             object.displayMonthSelector = "inline-block";
@@ -74,30 +92,110 @@ export default class MainComponent extends React.Component {
             object.displayYearSelector = "inline-block";
 
         }
-        this.setState({object});
+        this.setState(object);
+
     };
 
     handleMonthChange = (event, index, value) => {
-        let object = this.state;
+        let object = {};
         object.selectedMonth = value;
-        this.setState({object});
+        object.selectedMonthText = event.target.innerHTML;
+        object.reportParam = {};
+        this.setState(object);
     };
 
     handleQuarterChange = (event, index, value) => {
-        let object = this.state;
+        let object = {};
         object.selectedQuarter = value;
-        this.setState({object});
+        object.selectedQuarterText = event.target.innerHTML;
+        object.reportParam = {};
+        this.setState(object);
     };
 
     handleYearChange = (event, index, value) => {
-        let object = this.state;
+        let object = {};
         object.selectedYear = value;
-        this.setState({object});
+        object.reportParam = {};
+        this.setState(object);
     };
 
+    handleGetReport = () => {
+        let selectedOu = $("#ouTree").jstree("get_selected", true)[0]
+        if (selectedOu === undefined) {
+            alert("Please select organisation unit");
+            return;
+        }
+        let report = this.state.selectedReport;
+        let ouId = selectedOu.id;
+        let ouName = selectedOu.text;
+        let pe;
+        let peText;
+        switch (this.state.selectedPeriodType) {
+            case "monthly":
+                pe = this.state.selectedYear + this.state.selectedMonth;
+                peText = this.state.selectedMonthText + " - " + this.state.selectedYear;
+                break;
+            case "quarterly":
+                pe = this.state.selectedYear + this.state.selectedQuarter;
+                peText = this.state.selectedQuarterText + " - " + this.state.selectedYear;
+                break;
+            case "yearly":
+                pe = this.state.selectedYear;
+                peText = this.state.selectedYear;
+                break;
+        }
+        if (report === "") {
+            alert("Please select report");
+            return;
+        }
+        if (pe === "" || pe === undefined) {
+            alert("Please select period");
+            return;
+        }
+        let object = {};
+        object.showReport = true;
+        object.reportParam = {
+            report: report,
+            ouId: ouId,
+            ouName: ouName,
+            pe: pe,
+            peText: peText
+        };
+        this.setState(object);
+    };
+
+    renderReport = () => {
+        switch (this.state.selectedReport) {
+            case "as":
+                return <AntenatalServicesReport param={this.state.reportParam}/>;
+            case "aaes":
+                return <AdultAndElderlyServicesReport param={this.state.reportParam}/>;
+            case "chs":
+                return <ChildHealthServicesReport param={this.state.reportParam}/>;
+            case "cas":
+                return <ChildrenAndAdolescentServicesReport param={this.state.reportParam}/>;
+            case "pn":
+                return <PostNatalServicesReport param={this.state.reportParam}/>;
+        }
+    };
+
+    handlePrintReport = () => {
+        let mywindow = window.open('', 'PRINT');
+
+        mywindow.document.write('<html><head>');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(`</body>${$("#printable").html()}</html>`);
+
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10*/
+
+        mywindow.print();
+        mywindow.close();
+
+        return true;
+    };
 
     render() {
-        console.log(this.state);
         return (
             <div>
                 <div style={this.divStyle}>
@@ -111,7 +209,11 @@ export default class MainComponent extends React.Component {
                                         <MenuItem key={report.code} value={report.code} primaryText={report.name}/>);
                                 })
                             }
-                        </SelectField>
+                        </SelectField><br/>
+                        <RaisedButton label="GET REPORT" primary={true} onClick={this.handleGetReport}
+                                      style={{width: 150}}/><br/>
+                        <RaisedButton label="PRINT REPORT" backgroundColor="#47d147" style={{marginTop: 10, width: 150}}
+                                      onClick={this.handlePrintReport}/>
                     </Paper>
                 </div>
                 <div style={this.divStyle}>
@@ -170,6 +272,9 @@ export default class MainComponent extends React.Component {
                             }
                         </SelectField>
                     </Paper>
+                </div>
+                <div style={this.reportContainerStyle} id="printable">
+                    {this.renderReport()}
                 </div>
             </div>
         )

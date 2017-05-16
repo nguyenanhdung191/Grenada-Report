@@ -48,7 +48,8 @@ export default class OrgUnitSelector extends React.Component {
                         ],
                         "themes": {
                             "icons": false
-                        }
+                        },
+                        "multiple": false
                     }
                 });
             });
